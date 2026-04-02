@@ -668,7 +668,6 @@
     </footer>
 
     <script>
-        // === CHARTS with Threshold Lines ===
         const chartOptions = (thresholdValue, label, color) => ({
             responsive: true,
             maintainAspectRatio: false,
@@ -731,13 +730,7 @@
                     pointRadius: 0
                 }]
             },
-            options: chartOptions(200
-            
-            
-            
-            
-            
-            , 'WHO Limit: 35 µg/m³', '#fd7e14')
+            options: chartOptions(1000, 'Danger: 1000', '#fd7e14')
         });
 
         const soundChart = new Chart(soundCtx, {
@@ -755,8 +748,6 @@
             },
             options: chartOptions(85, 'NIOSH Limit: 85 dB', '#0d6efd')
         });
-
-        // === FUNCTIONS ===
         function showAlert(msg, type = 'error') {
             const a = document.getElementById('alertBox');
             a.textContent = msg;
@@ -856,11 +847,16 @@
             const icon = document.getElementById(idIcon);
             let percent, color, text, emoji;
             if (type === 'air') {
-                if (value <= 35) { percent = value / 35 * 100; color = '#198754'; text = 'Good'; emoji = '✅'; }
-                else { percent = Math.min(value / 150 * 100, 100); color = '#fd7e14'; text = value > 75 ? 'Unhealthy' : 'Moderate'; emoji = value > 75 ? '🚨' : '⚠️'; }
-            } else {
-                if (value <= 85) { percent = value / 85 * 100; color = '#0d6efd'; text = 'Safe'; emoji = '🟢'; }
-                else { percent = 100; color = '#dc3545'; text = 'Danger'; emoji = '🚨'; }
+                if (value <= 500) {
+                    percent = value / 500 * 100;
+                    color = '#198754'; text = 'Good'; emoji = '✅';
+                } else if (value <= 1500) {
+                    percent = value / 1500 * 100;
+                    color = '#fd7e14'; text = 'Moderate'; emoji = '⚠️';
+                } else {
+                    percent = Math.min(value / 3000 * 100, 100);
+                    color = '#dc3545'; text = 'Unhealthy'; emoji = '🚨';
+                }
             }
             fill.style.width = percent + '%';
             fill.style.backgroundColor = color;
