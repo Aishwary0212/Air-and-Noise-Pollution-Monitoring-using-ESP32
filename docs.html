@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation | EcoSense Monitor</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            /* Light Theme */
+            --bg-primary: #f8fafc;
+            --bg-surface: #ffffff;
+            --bg-sidebar: #f1f5f9;
+            --border-color: #e2e8f0;
+            
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+            
+            --accent-teal: #0d9488;
+            --accent-blue: #2563eb;
+            --accent-orange: #ea580c;
+            --accent-red: #dc2626;
+
+            --code-bg: #f1f5f9;
+            --code-text: #0f172a;
+            --pre-bg: #1e293b;
+            --pre-text: #f8fafc;
+            
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            
+            --transition: all 0.2s ease;
+        }
+
+        [data-theme="dark"] {
+            /* Dark Theme */
+            --bg-primary: #0f172a;
+            --bg-surface: #1e293b;
+            --bg-sidebar: #0b1120;
+            --border-color: #334155;
+            
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #64748b;
+            
+            --accent-teal: #14b8a6;
+            --accent-blue: #3b82f6;
+            --accent-orange: #f97316;
+            --accent-red: #ef4444;
+
+            --code-bg: #334155;
+            --code-text: #e2e8f0;
+            --pre-bg: #0b1120;
+            --pre-text: #f8fafc;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* Top Bar for Mobile */
+        .mobile-header {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: 60px;
+            background: var(--bg-surface);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 50;
+            padding: 0 20px;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .menu-btn {
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 280px;
+            background: var(--bg-sidebar);
+            border-right: 1px solid var(--border-color);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            padding: 32px 24px;
+            display: flex;
+            flex-direction: column;
+            z-index: 40;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-header {
+            margin-bottom: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 1.4rem;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        .theme-toggle {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .theme-toggle:hover {
+            border-color: var(--accent-blue);
+            color: var(--accent-blue);
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: var(--transition);
+            display: block;
+        }
+
+        .nav-links a:hover {
+            background: var(--bg-surface);
+            color: var(--accent-blue);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            padding: 48px;
+            max-width: 900px;
+            width: 100%;
+        }
+
+        .content-section {
+            margin-bottom: 48px;
+            background: var(--bg-surface);
+            padding: 40px;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* Typography */
+        h1, h2, h3 {
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+
+        h1 { font-size: 2.5rem; letter-spacing: -1px; margin-bottom: 8px; }
+        h2 { font-size: 1.8rem; margin-top: 32px; border-bottom: 1px solid var(--border-color); padding-bottom: 8px; }
+        h3 { font-size: 1.3rem; margin-top: 24px; }
+        
+        p { margin-bottom: 16px; color: var(--text-secondary); }
+        
+        ul, ol {
+            margin-bottom: 16px;
+            padding-left: 24px;
+            color: var(--text-secondary);
+        }
+
+        li { margin-bottom: 8px; }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 24px 0;
+            background: var(--bg-primary);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        th, td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background: var(--bg-sidebar);
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        /* Code & Pre */
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--code-bg);
+            color: var(--code-text);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+
+        pre {
+            background: var(--pre-bg);
+            color: var(--pre-text);
+            padding: 20px;
+            border-radius: var(--radius-md);
+            overflow-x: auto;
+            margin: 20px 0;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        pre code {
+            background: transparent;
+            color: inherit;
+            padding: 0;
+            font-size: 0.9rem;
+        }
+
+        /* Callouts / Alerts */
+        .callout {
+            padding: 16px 20px;
+            border-left: 4px solid var(--accent-blue);
+            background: rgba(37, 99, 235, 0.05);
+            border-radius: 0 var(--radius-md) var(--radius-md) 0;
+            margin: 24px 0;
+        }
+
+        .callout.warning {
+            border-left-color: var(--accent-orange);
+            background: rgba(234, 88, 12, 0.05);
+        }
+
+        .callout.error {
+            border-left-color: var(--accent-red);
+            background: rgba(220, 38, 38, 0.05);
+        }
+
+        .callout p {
+            margin: 0;
+            color: var(--text-primary);
+        }
+
+        .callout-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .mobile-header { display: flex; }
+            .sidebar {
+                transform: translateX(-100%);
+                padding-top: 80px;
+            }
+            .sidebar.open { transform: translateX(0); }
+            .main-content { margin-left: 0; padding: 80px 20px 40px; }
+            .content-section { padding: 24px; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="mobile-header">
+        <div class="logo">🌿 EcoSense</div>
+        <button class="menu-btn" id="menuBtn">☰</button>
+    </div>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="#" class="logo">🌿 EcoSense</a>
+            <button class="theme-toggle" id="themeToggleBtn" aria-label="Toggle Theme">🌙</button>
+        </div>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="#overview">Overview</a></li>
+                <li><a href="#hardware">Hardware Requirements</a></li>
+                <li><a href="#software">Software Requirements</a></li>
+                <li><a href="#getting-started">Getting Started</a></li>
+                <li><a href="#protocol">Serial Data Format</a></li>
+                <li><a href="#how-it-works">How It Works</a></li>
+                <li><a href="#troubleshooting">Known Issues & Fixes</a></li>
+                <li><a href="#features">Dashboard Features</a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        
+        <div class="content-section" id="overview">
+            <h1>EcoSense Monitor Docs</h1>
+            <p style="font-size: 1.2rem; margin-bottom: 24px;">Real-time environmental monitoring using ESP32 — tracks air quality and sound levels with a live web dashboard.</p>
+            
+            <h2>📸 Overview</h2>
+            <p>EcoSense is a full-stack IoT project that streams sensor data from an ESP32 to a browser-based dashboard over USB Serial (Web Serial API). <strong>No server, no cloud</strong> — just plug in and monitor.</p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Metric</th>
+                        <th>Sensor</th>
+                        <th>Range</th>
+                        <th>Unit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Air Quality</td>
+                        <td>MQ2 Gas Sensor</td>
+                        <td>0 – 3000</td>
+                        <td>µg/m³</td>
+                    </tr>
+                    <tr>
+                        <td>Sound Level</td>
+                        <td>I2S Microphone (INMP441)</td>
+                        <td>0 – 120</td>
+                        <td>dB</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="content-section" id="hardware">
+            <h2>🛠 Hardware Requirements</h2>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Component</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>ESP32</strong></td>
+                        <td>DOIT DevKit V1 (or compatible)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>MQ2 Gas Sensor</strong></td>
+                        <td>Analog output → GPIO34</td>
+                    </tr>
+                    <tr>
+                        <td><strong>I2S Microphone</strong></td>
+                        <td>INMP441 or compatible</td>
+                    </tr>
+                    <tr>
+                        <td><strong>USB Cable</strong></td>
+                        <td>For power + serial communication</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Wiring Guide</h3>
+            <p>Connect your components to the ESP32 exactly as follows:</p>
+            
+<pre><code>// MQ2 Gas Sensor
+MQ2 AOUT → GPIO34 (ADC1_CH6)
+MQ2 VCC  → 3.3V or 5V
+MQ2 GND  → GND
+
+// I2S Microphone
+MIC WS   → GPIO25
+MIC SD   → GPIO33
+MIC SCK  → GPIO26
+MIC VDD  → 3.3V
+MIC GND  → GND
+MIC L/R  → GND (for left channel / mono)</code></pre>
+        </div>
+
+        <div class="content-section" id="software">
+            <h2>💻 Software Requirements</h2>
+            <ul>
+                <li><strong>Arduino IDE</strong> 2.x</li>
+                <li><strong>esp32</strong> by Espressif Systems board package — version <strong>3.3.7 or later</strong>. <br>
+                    <span style="font-size: 0.9em; color: var(--text-muted);">Install via: <code>Tools</code> → <code>Board</code> → <code>Boards Manager</code> → search "esp32"</span></li>
+                <li><strong>Chrome</strong> or <strong>Edge</strong> browser (The Web Serial API is required for the dashboard).</li>
+            </ul>
+        </div>
+
+        <div class="content-section" id="getting-started">
+            <h2>🚀 Getting Started</h2>
+            
+            <h3>1. Flash the ESP32</h3>
+            <ol>
+                <li>Open <code>sketch_jan21a.ino</code> in Arduino IDE.</li>
+                <li>Select board: <code>Tools</code> → <code>Board</code> → <code>ESP32 Dev Module</code>.</li>
+                <li>Select the correct COM port.</li>
+                <li>Click <strong>Upload</strong>.</li>
+            </ol>
+
+            <h3>2. Open the Dashboard</h3>
+            <ol>
+                <li>Open <code>index.html</code> in Chrome or Edge.</li>
+                <li>Click <strong>Connect ESP32</strong>.</li>
+                <li>Select your COM port from the browser dialog popup.</li>
+                <li>Data will immediately begin streaming in real-time.</li>
+            </ol>
+
+            <h3>📁 Project Structure</h3>
+<pre><code>ecosense/
+├── sketch_jan21a/
+│   └── sketch_jan21a.ino   # ESP32 firmware
+└── index.html              # Web dashboard (no server needed)</code></pre>
+        </div>
+
+        <div class="content-section" id="protocol">
+            <h2>📡 Serial Data Format</h2>
+            <p>The ESP32 outputs two lines per second over Serial at <strong>115200 baud</strong>. The dashboard parses these lines using the Web Serial API directly in the browser.</p>
+<pre><code>air:142.0
+sound:63.4</code></pre>
+        </div>
+
+        <div class="content-section" id="how-it-works">
+            <h2>🔬 How It Works</h2>
+            
+            <h3>Air Quality (MQ2)</h3>
+            <ul>
+                <li>Uses the new <code>adc_oneshot</code> API (ESP-IDF v5 / Arduino core v3+) to avoid conflicts with the I2S legacy ADC driver.</li>
+                <li>Raw ADC value (0–4095) is mapped to 0–3000 µg/m³ range.</li>
+                <li><strong>Thresholds:</strong> Good ≤500 | Moderate ≤1500 | Unhealthy >1500</li>
+            </ul>
+
+            <h3>Sound Level (I2S Mic)</h3>
+            <ul>
+                <li>Reads 256 samples per measurement using the new <code>i2s_std</code> API.</li>
+                <li>Computes <strong>RMS amplitude</strong> across the sample buffer.</li>
+                <li>Converts to decibels: <code>dB = 20 × log10(rms) + 120</code></li>
+                <li>Constrained to 0–120 dB range.</li>
+                <li><strong>Thresholds:</strong> Safe ≤85 dB (NIOSH limit) | Danger >85 dB</li>
+            </ul>
+        </div>
+
+        <div class="content-section" id="troubleshooting">
+            <h2>⚠️ Known Issues & Fixes</h2>
+            
+            <div class="callout error">
+                <div class="callout-title">🛑 ADC Conflict Error</div>
+                <p><em>"driver_ng is not allowed to be used with the legacy driver"</em></p>
+                <p style="margin-top: 8px;">This happens when using <code>analogRead()</code> / <code>analogSetAttenuation()</code> alongside I2S on ESP32 Arduino core v3+.</p>
+                <p style="margin-top: 8px;"><strong>Fix:</strong> This codebase resolves it by using <code>esp_adc/adc_oneshot.h</code> instead of <code>analogRead()</code>, and <code>driver/i2s_std.h</code> instead of <code>driver/i2s.h</code>.</p>
+            </div>
+
+            <div class="callout warning">
+                <div class="callout-title">🌐 Web Serial Not Working</div>
+                <p>The Web Serial API strictly requires Google Chrome or Microsoft Edge desktop browsers. Safari and Firefox are not currently supported.</p>
+            </div>
+        </div>
+
+        <div class="content-section" id="features">
+            <h2>📊 Dashboard Features</h2>
+            <ul>
+                <li>Live line charts with dynamic threshold annotation lines.</li>
+                <li>Min / Avg / Max statistics per sensor.</li>
+                <li>Quality bar with color-coded status indicators.</li>
+                <li>Uptime counter and total data point tracker.</li>
+                <li>Clear chart button per sensor.</li>
+                <li>Graceful connect / disconnect handling.</li>
+            </ul>
+
+            <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 32px 0;">
+
+            <h3>📄 License</h3>
+            <p>MIT License — free to use, modify, and distribute.</p>
+
+            <h3>🙌 Credits</h3>
+            <p>Built with:</p>
+            <ul>
+                <li>Chart.js</li>
+                <li>chartjs-plugin-annotation</li>
+                <li>ESP-IDF / Arduino ESP32 Core</li>
+                <li>Web Serial API</li>
+            </ul>
+        </div>
+        
+    </main>
+
+    <script>
+        // Theme Toggle Logic
+        const themeToggleBtn = document.getElementById('themeToggleBtn');
+        const root = document.documentElement;
+        let isDarkMode = localStorage.getItem('theme') === 'dark';
+
+        function updateTheme() {
+            if (isDarkMode) {
+                root.setAttribute('data-theme', 'dark');
+                themeToggleBtn.textContent = '☀️';
+            } else {
+                root.removeAttribute('data-theme');
+                themeToggleBtn.textContent = '🌙';
+            }
+        }
+
+        themeToggleBtn.addEventListener('click', () => {
+            isDarkMode = !isDarkMode;
+            localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+            updateTheme();
+        });
+
+        // Initialize Theme
+        updateTheme();
+
+        // Mobile Menu Toggle
+        const menuBtn = document.getElementById('menuBtn');
+        const sidebar = document.getElementById('sidebar');
+
+        menuBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('open');
+        });
+
+        // Close sidebar on link click (mobile)
+        const navLinks = document.querySelectorAll('.nav-links a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if(window.innerWidth <= 900) {
+                    sidebar.classList.remove('open');
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
